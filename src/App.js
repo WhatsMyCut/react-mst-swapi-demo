@@ -1,13 +1,29 @@
-import logo from './logo.svg';
+import { useEffect } from 'react'; 
 import './App.css';
 
+import useAPIService  from './services/APIService';
+import { RingLoader } from 'react-spinners'
+const API_URL = process.env.REACT_APP_API_URL;
+
+
 function App() {
+  const {isLoading, error, data } = useAPIService({url: API_URL});
+
+  useEffect(() => {
+    console.log('useEffect', {isLoading, error, data})
+  }, [isLoading, error, data])
+
+  if (error) return (<>Error {JSON.stringify(error)}</>)
+
   return (
     <div className="App">
+
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <RingLoader loading={isLoading} color={'#aaccff'} size={150} />
+
         <p>
           Edit <code>src/App.js</code> and save to reload.
+          .{API_URL} { data }.
         </p>
         <a
           className="App-link"
