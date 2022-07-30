@@ -8,17 +8,23 @@ export const useAPIService = (props) => {
   const { url, type =  null, id = null} = props;
   const fullURL = url + (type ? type.toString() : '') + (id ? '/' + id.toString() : '' );
   
-  useEffect( props => {
-    const getData = () => fetch(fullURL)
+  const getData = useCallback(() => {
+    setLoading(true)
+    return fetch(fullURL)
     .then((res) => res.json())
-    .then((result) => { setData(result); return result})
+    .then((result) => { 
+      if (data === result) setData(result);
+      // console.log('fetched: ', data, result)
+      return result;
+    })
     .catch((err) => { setError(err) })
-    .finally(() => setLoading(false) );
+    .finally(() => setLoading(false));
+  }, [data, fullURL]);
 
+  useEffect( props => {
     setLoading(true);
     getData()
-    console.log('fetched: ', JSON.stringify(data))
-  }, [data, fullURL]);
+  }, [data, fullURL, getData]);
   return useCallback(() => { return { isLoading, error, data }}, [data, error, isLoading]);
 }
 
