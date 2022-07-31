@@ -6347,6 +6347,18 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
+mobx-react-lite@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-3.4.0.tgz#d59156a96889cdadad751e5e4dab95f28926dfff"
+  integrity sha512-bRuZp3C0itgLKHu/VNxi66DN/XVkQG7xtoBVWxpvC5FhAqbOCP21+nPhULjnzEqd7xBMybp6KwytdUpZKEgpIQ==
+
+mobx-react@^7.5.2:
+  version "7.5.2"
+  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-7.5.2.tgz#362d6dc7271698caf3b56229c3c68fb0b30e682e"
+  integrity sha512-NP44ONwSqTy+3KlD7y9k7xbsuGD+8mgUj3IeI65SbxF1IOB42/j9TbosgUEDn//CCuU6OmQ7k9oiu9eSpRBHnw==
+  dependencies:
+    mobx-react-lite "^3.4.0"
+
 mobx-state-tree@^5.1.5:
   version "5.1.5"
   resolved "https://registry.yarnpkg.com/mobx-state-tree/-/mobx-state-tree-5.1.5.tgz#7344d61072705747abb98d23ad21302e38200105"
@@ -6444,6 +6456,11 @@ npm-run-path@^4.0.1:
   integrity sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==
   dependencies:
     path-key "^3.0.0"
+
+nprogress@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/nprogress/-/nprogress-0.2.0.tgz#cb8f34c53213d895723fcbab907e9422adbcafb1"
+  integrity sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==
 
 nth-check@^1.0.2:
   version "1.0.2"
