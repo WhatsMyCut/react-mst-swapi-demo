@@ -1,5 +1,5 @@
 import { types, flow } from "mobx-state-tree";
-import useAPIService from "../../services/APIService";
+import { useAPIService } from "../../services/APIService";
 
 const Planet = types.model({
   name: types.optional(types.string, ""),

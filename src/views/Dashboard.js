@@ -6,12 +6,14 @@ import { useMst } from '../store/RootStore';
 
 export const Dashboard = observer((props) => {
   const { categories } = useMst();
+  let allCats = useRef({});
 
-  let allCats = useRef();
-  
   useEffect(() => {
+    categories.FetchAll();
+    allCats.current = categories.allCategories;
     console.log('useEffect', allCats.current)
   }, [categories])
+  
 
 
   return (
@@ -22,7 +24,7 @@ export const Dashboard = observer((props) => {
         <Link to={'/planets'}>Planet List</Link>
         <div>
           Edit <code>src/App.js</code> and save to reload.
-          .{ allCats.current && JSON.stringify(allCats.current) }
+          .{ JSON.stringify(categories.allCategories) }
         </div>
         <a
           className="App-link"

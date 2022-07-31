@@ -3,7 +3,7 @@ import { createContext, useContext } from "react";
 import { Category, Planet } from "./models/";
 
 const RootStore = types.model({
-  categories: types.optional(types.map(Category), {}),
+  categories: Category,
   planets: types.optional(types.map(Planet), {})
 })
 
