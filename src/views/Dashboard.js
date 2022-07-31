@@ -1,9 +1,11 @@
+/** @jsxImportSource theme-ui */
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Link } from "react-router-dom";
 import { RingLoader } from 'react-spinners'
 import { observer } from "mobx-react-lite";
 import { useMst } from '../store/RootStore';
 import { Container, Text, Heading, Card, NavLink } from 'theme-ui';
+import { FlexboxSidebar } from '../components';
 
 export const Dashboard = observer((props) => {
   const { categories } = useMst();
@@ -45,29 +47,21 @@ export const Dashboard = observer((props) => {
     }
   }, [])
 
-  if (loading) return "loading..."
 
   const panels = renderCategoryPanels(categories.allCategories)
   
   return (
+    <FlexboxSidebar sidebar={(<>Sidebar</>)}>
     <div className="App" styles={[{...props.styles, ...props.theme}]}>
 
-        <RingLoader loading={loading} color={'#000'} size={150} />
-        <Link to={'/planets'}>Planet List</Link>
       <header className="App-header">
         <div>
           Edit <code>src/App.js</code> and save to reload.
         </div>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
       <Container >
+        <RingLoader loading={loading} color={'#000'} size={150} />
+        <Link to={'/planets'}>Planet List</Link>
         <Heading variant={'h1'}>H1</Heading>
         <Text>The text</Text>
         <div>
@@ -75,6 +69,7 @@ export const Dashboard = observer((props) => {
         </div>
       </Container>
     </div>
+    </FlexboxSidebar>
   )
 });
 

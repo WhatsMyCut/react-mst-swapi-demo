@@ -1,3 +1,4 @@
-import * as Breadcrumb from "./Breadcrumb";
+import Breadcrumb from "./Breadcrumb";
 import Icon from "./Icon";
-export { Breadcrumb, Icon };
+import FlexboxSidebar from "./FlexboxSidebar";
+export { Breadcrumb, Icon, FlexboxSidebar };
