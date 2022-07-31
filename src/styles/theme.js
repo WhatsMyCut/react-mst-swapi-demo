@@ -1,6 +1,6 @@
-import type { Theme } from 'theme-ui'
+/** @jsxImportSource theme-ui */
 
-export const theme: Theme = {
+export const theme = {
   fonts: {
     body: 'system-ui, sans-serif',
     heading: '"Avenir Next", sans-serif',
