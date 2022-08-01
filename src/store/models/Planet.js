@@ -26,7 +26,7 @@ const Planet = types.model({
 }).views(self => {
 return {
   get allPlanets() {
-    console.log('Planet.allPlanets', self.planets)
+    console.log('Planet.allPlanets', JSON.stringify(self.planets))
     return self.planets
   },
   findPlanetByName(name) {
