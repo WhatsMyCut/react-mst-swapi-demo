@@ -5,12 +5,15 @@ import { observer } from "mobx-react-lite";
 import { Container, Text, NavLink, Button, Heading } from 'theme-ui';
 import TableView from '../TableView';
 import './styles.scss'
+import { FilterInput } from '../FilterInput';
+import { tab } from '@testing-library/user-event/dist/tab';
 export const PlanetsTable = observer((props) => {
   // console.log('Sidebar', {props})
 
   const { planets } = useMst();
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState({});
+  const [filteredData, setFilteredData] = useState({});
   const { setCurrentRow, currentRow } = props;
   // One to load data
   useEffect(() => {
@@ -27,8 +30,11 @@ export const PlanetsTable = observer((props) => {
     }
   }, [planets, loading]) // <- this will monitor state 
 
+  useEffect(() => {
+    setFilteredData(tableData.results)
+  },[])
 
-  const CategoryPanel = useCallback(props => {
+  const PlanetPanel = useCallback(props => {
     // Adds aria-labels and capitalization using an old-school method.
     return (
       <Container sx={{ marginTop: '5px', backgroundColor: '#efefef', borderWidth: 2, borderColor: '#999', borderRadius: 5, }}>
@@ -43,13 +49,14 @@ export const PlanetsTable = observer((props) => {
     if (!!tableData) {
       const json = JSON.parse(tableData);
       const { next, previous, count } = json;
+      const display = filteredData.length
 
       return (
         <Container sx={{margin: '5px'}}>
         {!!previous && 
           <Button htmlFor={previous}  title={'Prev'}>Prev</Button>
         }
-        <Text sx={{ padding: '15px'}}>Displaying { count } records</Text>
+        <Text sx={{ padding: '15px'}}>Displaying {display || 0} of { count } records</Text>
         {!!next && 
           <Button htmlFor={next} title={'Next'} >Next</Button>
         }
@@ -61,20 +68,37 @@ export const PlanetsTable = observer((props) => {
   const renderTable = useCallback(tableData => {
     if (!tableData) return;
     const displayFields = ['name', 'rotation_period', 'orbital_period', 'diameter', 'climate', 'gravity', 'terrain', 'surface_water', 'population']
-    return <TableView data={ JSON.parse(tableData).results} displayFields={displayFields} setCurrentRow={setCurrentRow} selectedRow={currentRow} />
-  }, [])
+    return <TableView data={filteredData} displayFields={displayFields} setCurrentRow={setCurrentRow} selectedRow={currentRow} />
+  }, [filteredData, currentRow, setCurrentRow])
 
   const pagination = renderPagination(planets.allPlanets);
   const table = renderTable(planets.allPlanets);
 
+  const handleFilter = useCallback((e) => {
+    e.preventDefault();
+    const { target } = e;
+    if (!!target.value && target.value !== '') {
+      const filteredData = Object.values(JSON.parse(planets.allPlanets).results).filter((v) => String(v.name).indexOf(target.value) !== -1)
+      console.log('handleFilter', target.value, {filteredData} )
+      setFilteredData(filteredData)
+    } else {
+      setFilteredData(JSON.parse(planets.allPlanets).results);
+    }
+  }, [])
+  
+
   return (
     <Container sx={{backgroundColor: 'transparent', borderWidth: 2,}}>
-    <RingLoader loading={planets.status !== 'done'} color={'#000'} size={50} />
     <Container>
       <Heading variant={'h1'}>Planet List</Heading>
-
+      <FilterInput handleFilter={handleFilter}/>
     </Container>
-    <Container>{table}</Container>
+    {planets.status !== 'done' &&
+      <RingLoader loading={planets.status !== 'done'} color={'#000'} size={50} />
+    }
+    {planets.status === 'done'  && 
+      <Container>{table}</Container>
+    }
     <Container>{pagination}</Container>
     </Container>
   )

@@ -5,9 +5,9 @@ import './styles.scss';
 export const TableView = (props) => {
   const { data, displayFields, setCurrentRow, selectedRow } = props;
 
-  console.log('TableView', {props})
   const renderHeaders = () => {
-    if (!data) return;
+    if (!data || !data[0]) return;
+    console.log('TableView', {data})
     return (
       <tr key={'header'}>
         {Object.keys(data[0]).map((v, i) => {
@@ -21,14 +21,14 @@ export const TableView = (props) => {
   }
   
   const renderRows = () => {
-    if (!data) return;
+    if (!data || data.length < 1) return (<tbody><tr><td colSpan={'*'} sx={{textAlign: 'center', fontWeight: 900, padding: '15px'}}>No results</td></tr></tbody>);
     return (
       <tbody>
       { Object.values(data).map((v, i) => {
           return (
             <tr key={i} id={i} className={i === selectedRow ? 'selected' : ''} onClick={e => setCurrentRow(e, i)}>
             {Object.values(v).map((u, j) => {
-                if (displayFields.includes(Object.keys(data[0])[j])) {
+                if (data[0] && displayFields.includes(Object.keys(data[0])[j])) {
                   return <td key={j}>{u}</td>
                 }
                 return false;
@@ -43,7 +43,7 @@ export const TableView = (props) => {
   
   return (
     <Container>
-      <table>
+      <table sx={{width: '100%'}}>
         <thead>
           {renderHeaders()}
         </thead>
