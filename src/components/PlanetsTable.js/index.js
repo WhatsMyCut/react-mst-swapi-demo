@@ -2,16 +2,16 @@ import { useEffect, useState, useCallback } from 'react';
 import { useMst } from '../../store/RootStore';
 import { RingLoader } from 'react-spinners'
 import { observer } from "mobx-react-lite";
-import { Container, Text, NavLink, Button } from 'theme-ui';
+import { Container, Text, NavLink, Button, Heading } from 'theme-ui';
 import TableView from '../TableView';
-
+import './styles.scss'
 export const PlanetsTable = observer((props) => {
   // console.log('Sidebar', {props})
 
   const { planets } = useMst();
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState({});
-
+  const { setCurrentRow, currentRow } = props;
   // One to load data
   useEffect(() => {
     setLoading(true);
@@ -45,15 +45,15 @@ export const PlanetsTable = observer((props) => {
       const { next, previous, count } = json;
 
       return (
-        <>
-        {next && 
-          <Button htmlFor={next} />
+        <Container sx={{margin: '5px'}}>
+        {!!previous && 
+          <Button htmlFor={previous}  title={'Prev'}>Prev</Button>
         }
-        <Text>Displaying { count } records</Text>
-        {previous && 
-          <Button htmlFor={previous} />
+        <Text sx={{ padding: '15px'}}>Displaying { count } records</Text>
+        {!!next && 
+          <Button htmlFor={next} title={'Next'} >Next</Button>
         }
-        </>
+        </Container>
       )
     }
   }, [])
@@ -61,7 +61,7 @@ export const PlanetsTable = observer((props) => {
   const renderTable = useCallback(tableData => {
     if (!tableData) return;
     const displayFields = ['name', 'rotation_period', 'orbital_period', 'diameter', 'climate', 'gravity', 'terrain', 'surface_water', 'population']
-    return <TableView data={ JSON.parse(tableData).results} displayFields={displayFields} />
+    return <TableView data={ JSON.parse(tableData).results} displayFields={displayFields} setCurrentRow={setCurrentRow} selectedRow={currentRow} />
   }, [])
 
   const pagination = renderPagination(planets.allPlanets);
@@ -70,6 +70,10 @@ export const PlanetsTable = observer((props) => {
   return (
     <Container sx={{backgroundColor: 'transparent', borderWidth: 2,}}>
     <RingLoader loading={planets.status !== 'done'} color={'#000'} size={50} />
+    <Container>
+      <Heading variant={'h1'}>Planet List</Heading>
+
+    </Container>
     <Container>{table}</Container>
     <Container>{pagination}</Container>
     </Container>

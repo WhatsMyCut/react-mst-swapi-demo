@@ -1,14 +1,15 @@
 /** @jsxImportSource theme-ui */
 import { Container } from "theme-ui"
+import './styles.scss';
 
 export const TableView = (props) => {
-  const { data, displayFields } = props;
+  const { data, displayFields, setCurrentRow, selectedRow } = props;
 
   console.log('TableView', {props})
   const renderHeaders = () => {
     if (!data) return;
     return (
-      <tr>
+      <tr key={'header'}>
         {Object.keys(data[0]).map((v, i) => {
           if (displayFields.includes(v)) {
             return <th key={i}>{v.replace('_', ' ').toLocaleUpperCase()}</th>
@@ -25,11 +26,10 @@ export const TableView = (props) => {
       <tbody>
       { Object.values(data).map((v, i) => {
           return (
-            <tr key={i}>
+            <tr key={i} id={i} className={i === selectedRow ? 'selected' : ''} onClick={e => setCurrentRow(e, i)}>
             {Object.values(v).map((u, j) => {
                 if (displayFields.includes(Object.keys(data[0])[j])) {
-                console.log('rows', {u})
-                return <td key={j}>{u}</td>
+                  return <td key={j}>{u}</td>
                 }
                 return false;
             })}

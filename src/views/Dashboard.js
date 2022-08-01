@@ -1,26 +1,39 @@
 /** @jsxImportSource theme-ui */
+import { useCallback, useRef } from 'react';
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { Container, Text, Heading, Card, NavLink } from 'theme-ui';
-import { FlexboxSidebar, PlanetsTable } from '../components';
+import { Breadcrumb, FlexboxSidebar, PlanetsTable } from '../components';
 import Sidebar from "../components/Sidebar";
 
 export const Dashboard = observer((props) => {
+  const currentRow = useRef({})
+  const currentCategory = useRef({})
+
+  const setCurrentRow = useCallback(e => {
+    e.preventDefault();
+    const { currentTarget } = e;
+    currentRow.current = currentTarget.id;
+    console.log('setCurrentRow', currentRow.current, {currentTarget})
+  }, [])
+
+  const setCurrentCategory = useCallback(e => {
+    e.preventDefault();
+    const { currentTarget } = e;
+    currentCategory.current = currentTarget.href;
+    console.log('setCurrentCategory', currentCategory.current.href, {currentTarget})
+  }, [])
+
 
   return (
-    <FlexboxSidebar sidebar={<Sidebar {...props} />}>
+    <FlexboxSidebar sidebar={<Sidebar {...props} setCurrentCategory={setCurrentCategory} />}>
     <div className="App" styles={[{...props.styles, ...props.theme}]}>
 
       <header className="App-header">
-        <div>
-          Edit <code>src/App.js</code> and save to reload.
-        </div>
+        <Breadcrumb />
       </header>
       <Container >
-        <Link to={'/planets'}>Planet List</Link>
-        <Heading variant={'h1'}>H1</Heading>
-        <Text>The text</Text>
-        <PlanetsTable />
+        <PlanetsTable setCurrentRow={setCurrentRow} currentRow={currentRow.current} />
       </Container>
     </div>
     </FlexboxSidebar>

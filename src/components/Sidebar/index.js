@@ -9,7 +9,7 @@ export const Sidebar = observer((props) => {
 
   const { categories } = useMst();
   const [loading, setLoading] = useState(false);
-
+  const { setCurrentCategory } = props;
   // One to load data
   useEffect(() => {
     setLoading(true);
@@ -29,7 +29,7 @@ export const Sidebar = observer((props) => {
     // Adds aria-labels and capitalization using an old-school method.
     return (
       <Container sx={{ marginTop: '5px', backgroundColor: '#efefef', borderWidth: 2, borderColor: '#999', borderRadius: 5, }}>
-        <NavLink href={props.category} p={2} aria-label={`Navigate to the ${props.category} category.`}>
+        <NavLink href={props.category} id={props.id} p={2} aria-label={`Navigate to the ${props.category} category.`} onClick={setCurrentCategory}>
         { String(props.category)[0].toLocaleUpperCase() + String(props.category).slice(1) }  
         </NavLink>
       </Container>
@@ -40,7 +40,7 @@ export const Sidebar = observer((props) => {
     if (!!data) {
       return (
         Object.entries(JSON.parse(data)).map((v, i) => {
-          return (<CategoryPanel category={v[0]} url={v[1]} key={i} {...props}/>)
+          return (<CategoryPanel category={v[0]} url={v[1]} key={i} id={i} {...props}/>)
         })
       )
     }
