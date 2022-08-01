@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 export const getData = async fullURL => {
+  console.log('getData: ', fullURL)
   return await fetch(fullURL)
   .then((res) => res.json(), (rej) => console.error(rej))
   .then((result) => { 

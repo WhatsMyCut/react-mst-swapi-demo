@@ -4,7 +4,7 @@ import { Category, Planet } from "./models/";
 
 const RootStore = types.model({
   categories: Category,
-  planets: types.optional(types.map(Planet), {})
+  planets: Planet
 })
 
 let initialState = RootStore.create({
