@@ -9,7 +9,6 @@ const Category = types
   .views((self) => {
     return {
       get allCategories() {
-        console.log('Category.allCategories', self.categories);
         return self.categories;
       },
       findCategoryByName(name) {
