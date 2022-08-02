@@ -1,14 +1,11 @@
-import './styles.scss'
-
-import { Button, Container, Heading, NavLink, Text } from 'theme-ui';
-import { useCallback, useEffect, useState } from 'react';
-
-import { FilterInput } from '../FilterInput';
-import { RingLoader } from 'react-spinners'
-import TableView from '../TableView';
-import { observer } from "mobx-react-lite";
+import { useEffect, useState, useCallback } from 'react';
 import { useMst } from '../../store/RootStore';
-
+import { RingLoader } from 'react-spinners'
+import { observer } from "mobx-react-lite";
+import { Container, Text, Button, Heading } from 'theme-ui';
+import TableView from '../TableView';
+import './styles.scss'
+import { FilterInput } from '../FilterInput';
 export const PlanetsTable = observer((props) => {
   // console.log('Sidebar', {props})
 
@@ -21,7 +18,8 @@ export const PlanetsTable = observer((props) => {
   const setDrawerData = useCallback((e) => {
     e.preventDefault();
     const rowId = e.currentTarget.id;
-    return setCurrentRow(filteredData[rowId])
+    // console.log('setDrawerData', {rowId}, {filteredData})
+    setCurrentRow(filteredData[rowId])
   }, [setCurrentRow, filteredData]);
 
   // One to load data
@@ -37,26 +35,27 @@ export const PlanetsTable = observer((props) => {
       setLoading(false);
       setTableData(JSON.parse(planets.allPlanets))
     }
-  }, [planets, loading]) // <- this will monitor state
+  }, [planets, loading]) // <- this will monitor state 
 
   const renderPagination = useCallback(tableData => {
     if (!!tableData) {
       const json = JSON.parse(tableData);
       const { next, previous, count } = json;
+      const display = filteredData.length
 
       return (
         <Container sx={{margin: '5px'}}>
-        {!!previous &&
+        {!!previous && 
           <Button htmlFor={previous}  title={'Prev'}>Prev</Button>
         }
-        <Text sx={{ padding: '15px'}}>Displaying {filteredData.length || 0} of { count } records</Text>
-        {!!next &&
+        <Text sx={{ padding: '15px'}}>Displaying {display || 0} of { count } records</Text>
+        {!!next && 
           <Button htmlFor={next} title={'Next'} >Next</Button>
         }
         </Container>
       )
     }
-  }, [filteredData])
+  }, [])
 
   const renderTable = useCallback(tableData => {
     if (!tableData) return;
@@ -64,25 +63,29 @@ export const PlanetsTable = observer((props) => {
     return <TableView data={filteredData} displayFields={displayFields} setCurrentRow={setDrawerData} selectedRow={currentRow} />
   }, [filteredData, currentRow, setDrawerData])
 
-
+  
   const pagination = renderPagination(planets.allPlanets);
   const table = renderTable(planets.allPlanets);
+
+  useEffect(() => {
+    setLoading((planets.status === 'loading'))
+  }, [planets])
 
   const handleFilter = useCallback((e) => {
     e.preventDefault();
     const { target } = e;
     if (!!target.value && target.value !== '') {
       const filteredData = Object.values(JSON.parse(planets.allPlanets).results).filter((v) => String(v.name).toLocaleLowerCase().indexOf(String(target.value).toLocaleLowerCase()) !== -1)
+      // console.log('handleFilter', target.value, {filteredData} )
       setFilteredData(filteredData)
     } else {
       setFilteredData(JSON.parse(planets.allPlanets).results);
     }
   }, [])
-
+  
   useEffect(() => {
     setFilteredData(tableData.results);
     renderTable()
-    renderPagination();
   },[])
 
 

@@ -19,7 +19,7 @@ const PlanetDetail = types.model({
 }).views(self => {
 return {
   get planetDetails() {
-    console.log('PlanetDeteail.planetDetails', self.planetdetails)
+    // console.log('PlanetDeteail.planetDetails', self.planetdetails)
     return self.planetdetails
   },
   findPlanetDetailByName(name) {

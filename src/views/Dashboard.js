@@ -9,22 +9,22 @@ import Drawer from '../components/Drawer';
 import PlanetDetail from '../components/PlanetDetail';
 
 export const Dashboard = observer((props) => {
-  const currentRow = useRef(undefined);
-  const currentCategory = useRef(undefined);
+  const [currentRow, setRow] = useState(undefined);
+  const [currentCategory, setCategory] = useState('planets');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerContent, setDrawerContent] = useState();
 
   const handleClose = useCallback(() => {
-    console.log('handleClose', drawerOpen, currentRow.current)
-    currentRow.current = undefined;
+    setRow(undefined);
     setDrawerOpen(false);
   }, [])
 
   const setCurrentRow = useCallback(rowData => {
-    currentRow.current = rowData;
+    if (!!rowData) {
+      setRow(rowData);
+    }
     if (rowData.url) {
       
-      console.log('setCurrentRow', {rowData})
       if (String(rowData.url).indexOf('planets') !== -1) {
         setDrawerContent(<PlanetDetail rowData={rowData} />)
       } else if (String(rowData.url).indexOf('category') !== -1){
@@ -32,29 +32,31 @@ export const Dashboard = observer((props) => {
       }
       setDrawerOpen(true);
     }
-  }, [])
+  }, [currentRow])
 
   const setCurrentCategory = useCallback(e => {
     e.preventDefault();
     const { currentTarget } = e;
-    currentCategory.current = currentTarget.href;
-    // console.log('setCurrentCategory', currentCategory.current.href, {currentTarget})
+    setCategory(String(currentTarget.href).replace(process.env.REACT_APP_HOSTNAME, ''));
   }, [])
   
 
   useEffect(() => {
   }, [])
+  const drawer = (drawerContent)
 
+  const table = (<PlanetsTable setCurrentRow={setCurrentRow} currentRow={currentRow} />)
+  const breadcrumb = (<Breadcrumb currentCategory={currentCategory} currentRow={currentRow} />)
   return (
     <FlexboxSidebar sidebar={<Sidebar {...props} setCurrentCategory={setCurrentCategory} />}>
-      <Drawer handleClose={handleClose} isOpen={drawerOpen} >{drawerContent}</Drawer>
+      <Drawer handleClose={handleClose} isOpen={drawerOpen} >{drawer}</Drawer>
       <Container className="App" styles={[{...props.styles, ...props.theme}]}>
 
         <header className="App-header">
-          <Breadcrumb />
+          { breadcrumb }
         </header>
         <Container >
-          <PlanetsTable setCurrentRow={setCurrentRow} currentRow={currentRow.current} />
+          { table }
         </Container>
       </Container>
     </FlexboxSidebar>

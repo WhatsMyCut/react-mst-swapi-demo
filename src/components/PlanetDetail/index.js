@@ -164,12 +164,13 @@ export const PlanetDetail = (props) => {
       }
   }, [])
 
-  const details = renderPlanetDetails()
-
+  
   useEffect(() => {
     if (rowData.url !== url) setURL(rowData.url)
-  }, [rowData, url])
-
+    setLoading(planetdetails.status === "loading")
+  }, [planetdetails, rowData, url])
+  
+  const details = renderPlanetDetails()
   return (
     <Container className={'detail-panel'}>
       <RingLoader loading={loading} color={'#000'} size={150} />

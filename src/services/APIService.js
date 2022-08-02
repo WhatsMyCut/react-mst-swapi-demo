@@ -1,12 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 
 export const getData = async fullURL => {
-  console.log('getData: ', fullURL)
   return await fetch(fullURL)
   .then((res) => res.json(), (rej) => console.error(rej))
   .then((result) => { 
     if (result ) {
-      console.log('fetched: ', result)
       return JSON.stringify(result);
     }
     return;
@@ -22,7 +20,6 @@ export const useAPIService = (props) => {
   const url = process.env.REACT_APP_API_URL;
   const { type = null, id = null} = props;
   const fullURL = url + (type ? type.toString() : '') + (id ? '/' + id.toString() : '' );
-  console.log({fullURL})
 
   useEffect( props => {
     setLoading(true);

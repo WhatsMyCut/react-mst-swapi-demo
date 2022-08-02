@@ -10,7 +10,6 @@ export const TableView = (props) => {
 
   const renderHeaders = useCallback(() => {
     if (!data || !data[0]) return;
-    console.log('TableView', {data})
     return (
       <tr key={'header'}>
         {Object.keys(data[0]).map((v, i) => {
@@ -25,11 +24,9 @@ export const TableView = (props) => {
   
   const renderRows = useCallback(() => {
     if (!data || data.length < 1) return (<tbody><tr><td colSpan={'*'} sx={{textAlign: 'center', fontWeight: 900, padding: '15px'}}>No results</td></tr></tbody>);
-    console.log('selectedRow',{props})
     return (
       <tbody>
       { Object.values(data).map((v, i) => {
-        console.log('here2', {v}, {selectedRow})
           let className = (v && selectedRow && v.name === selectedRow.name) ? 'selected' : '';
           return (
             <tr key={i} id={i} className={className} onClick={e => setCurrentRow(e, i)}>
