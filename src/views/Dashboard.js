@@ -6,6 +6,7 @@ import { Container, Text, Heading, Card, NavLink } from 'theme-ui';
 import { Breadcrumb, FlexboxSidebar, PlanetsTable } from '../components';
 import Sidebar from "../components/Sidebar";
 import Drawer from '../components/Drawer';
+import PlanetDetail from '../components/PlanetDetail';
 
 export const Dashboard = observer((props) => {
   const currentRow = useRef(undefined);
@@ -25,7 +26,7 @@ export const Dashboard = observer((props) => {
       
       console.log('setCurrentRow', {rowData})
       if (String(rowData.url).indexOf('planets') !== -1) {
-        setDrawerContent('planet panel')
+        setDrawerContent(<PlanetDetail rowData={rowData} />)
       } else if (String(rowData.url).indexOf('category') !== -1){
         setDrawerContent('category panel');
       }
@@ -46,7 +47,7 @@ export const Dashboard = observer((props) => {
 
   return (
     <FlexboxSidebar sidebar={<Sidebar {...props} setCurrentCategory={setCurrentCategory} />}>
-      <Drawer handleClose={handleClose} isOpen={drawerOpen} ><Text>{drawerContent}</Text></Drawer>
+      <Drawer handleClose={handleClose} isOpen={drawerOpen} >{drawerContent}</Drawer>
       <Container className="App" styles={[{...props.styles, ...props.theme}]}>
 
         <header className="App-header">

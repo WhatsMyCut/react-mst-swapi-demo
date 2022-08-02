@@ -11,8 +11,9 @@
   background-color: #fff;
   border-left: 1px solid;
   z-index: 2;
-  max-width: 65vw;
+  max-width: 55vw;
   width: 0 !important;
+  overflow-y: auto;
 }
 
 .closed {
@@ -21,6 +22,6 @@
 }
 
 .open {
-  width: 65vw !important;
+  width: 55vw !important;
 }
 

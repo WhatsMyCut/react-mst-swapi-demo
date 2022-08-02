@@ -1,26 +1,29 @@
-import { onSnapshot, types } from "mobx-state-tree";
+import { onSnapshot, process, types } from "mobx-state-tree";
 import { createContext, useContext } from "react";
-import { Category, Planet } from "./models/";
+import { Category, Planet, PlanetDetail } from "./models/";
 
 const RootStore = types.model({
   categories: Category,
-  planets: Planet
+  planets: Planet,
+  planetdetails: PlanetDetail
 })
 
 let initialState = RootStore.create({
   planets: {},
   categories: {},
+  planetdetails: {},
 })
 
-// if (process.browser) {
-//   const data = localStorage.getItem("rootState");
-//   if (data) {
-//     const json = JSON.parse(data);
-//     if (RootModel.is(json)) {
-//       initialState = RootModel.create(json);
-//     }
-//   }
-// }
+
+if (process.browser) {
+  const data = localStorage.getItem("rootState");
+  if (data) {
+    const json = JSON.parse(data);
+    if (RootStore.is(json)) {
+      initialState = RootStore.create(json);
+    }
+  }
+}
 
 export const rootStore = initialState;
 

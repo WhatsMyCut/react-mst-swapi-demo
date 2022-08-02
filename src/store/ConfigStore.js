@@ -36,7 +36,6 @@ export class ConfigStore {
   // };
 
   changeTheme = (theme) => {
-    console.log('here2', {theme})
     runInAction(() => this.setTheme(theme));
   };
 

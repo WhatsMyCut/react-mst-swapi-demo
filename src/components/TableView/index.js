@@ -5,7 +5,6 @@ import './styles.scss';
 
 export const TableView = (props) => {
   const { data, displayFields, setCurrentRow, selectedRow } = props;
-  const [json, setJson] = useState(data);
   const [rows, setRows] = useState(undefined);
   const [headers, setHeaders] = useState(undefined);
 

@@ -1,0 +1,42 @@
+@import '../../styles/app.scss';
+
+.detail-panel {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5%;
+  width: 95%;
+  padding-right: 15px;
+}
+
+.detail-container {
+  padding: 15px;
+}
+
+.detail-subcontainer {
+  width: 100%;
+  text-align: left;
+}
+
+.detail-header {
+  text-align: center;
+  padding: 10px 0;
+  font-size: 2em;
+}
+
+.detail-row {
+  flex: 1 1 auto;
+  justify-content: space-evenly !important;
+  align-items: end;
+}
+
+.detail-row label {
+  max-width: 35%;
+  text-align: 'left' !important;
+  width: 100% !important;
+}
+
+.detail-row.right {
+  text-align: right !important;
+}

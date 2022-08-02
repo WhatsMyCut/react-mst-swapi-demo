@@ -1,3 +1,4 @@
 import Category from './Category';
 import Planet from './Planet';
-export { Category, Planet }
+import PlanetDetail from './PlanetDetail';
+export { Category, Planet, PlanetDetail }
