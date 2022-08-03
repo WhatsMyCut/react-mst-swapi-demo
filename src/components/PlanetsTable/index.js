@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useMst } from '../../store/RootStore';
 import { RingLoader } from 'react-spinners'
 import { observer } from "mobx-react-lite";
@@ -7,18 +7,34 @@ import TableView from '../TableView';
 import './styles.scss'
 import { FilterInput } from '../FilterInput';
 export const PlanetsTable = observer((props) => {
-  // console.log('Sidebar', {props})
+  // console.log('PlanetsTable', {props})
 
   const { planets } = useMst();
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState({});
   const [filteredData, setFilteredData] = useState({});
   const { setCurrentRow, currentRow } = props;
+  const filterRef = useRef();
+
+
+  const getFilteredData = useCallback(() => {
+    const value = filterRef.current.value;
+    const data = JSON.parse(planets.allPlanets).results;
+    return Object.values(data).filter((v) => String(v.name).toLocaleLowerCase().indexOf(String(value).toLocaleLowerCase()) !== -1);
+  }, [planets.allPlanets]);
+
+  const handleFilter = useCallback(() => {
+    const value = filterRef.current.value;
+    if (!!value) {
+      return setFilteredData(getFilteredData(value))
+    } 
+    setFilteredData(tableData.results);
+  }, [getFilteredData, tableData.results])
+  
 
   const setDrawerData = useCallback((e) => {
     e.preventDefault();
     const rowId = e.currentTarget.id;
-    // console.log('setDrawerData', {rowId}, {filteredData})
     setCurrentRow(filteredData[rowId])
   }, [setCurrentRow, filteredData]);
 
@@ -26,22 +42,14 @@ export const PlanetsTable = observer((props) => {
   useEffect(() => {
     setLoading(true);
     planets.FetchAll();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // <-- leave empty so it only executes once.
-
-  // one to finish
-  useEffect(() => {
-    if (planets && planets.status === 'done') {
-      setLoading(false);
-      setTableData(JSON.parse(planets.allPlanets))
-    }
-  }, [planets, loading]) // <- this will monitor state 
 
   const renderPagination = useCallback(() => {
     if (!!tableData) {
       const json = tableData;
       const { next, previous, count } = json;
-      const display = filteredData.length
+      const display = (filteredData && filteredData.length) || 0;
 
       return (
         <Container sx={{margin: '5px'}}>
@@ -55,49 +63,43 @@ export const PlanetsTable = observer((props) => {
         </Container>
       )
     }
-  }, [])
+  }, [filteredData, tableData])
 
-  const renderTable = useCallback(tableData => {
-    if (!tableData) return;
-    const displayFields = ['name', 'rotation_period', 'orbital_period', 'diameter', 'climate', 'gravity', 'terrain', 'surface_water', 'population']
-    return <TableView data={filteredData} displayFields={displayFields} setCurrentRow={setDrawerData} selectedRow={currentRow} />
-  }, [filteredData, currentRow, setDrawerData])
+  const renderTable = useCallback(() => {
+      const filtered = getFilteredData();
+      const displayFields = ['name', 'rotation_period', 'orbital_period', 'diameter', 'climate', 'gravity', 'terrain', 'surface_water', 'population']
+      return <TableView data={filtered} displayFields={displayFields} setCurrentRow={setDrawerData} selectedRow={currentRow} />
+  }, [getFilteredData, setDrawerData, currentRow]);
 
-  
-  const pagination = renderPagination(planets.allPlanets);
-  const table = renderTable(planets.allPlanets);
-
+  // one to finish
   useEffect(() => {
-    setLoading((planets.status === 'loading'))
-  }, [planets])
-
-  const handleFilter = useCallback((e) => {
-    e.preventDefault();
-    const { target } = e;
-    if (!!target.value && target.value !== '') {
-      const filteredData = Object.values(JSON.parse(planets.allPlanets).results).filter((v) => String(v.name).toLocaleLowerCase().indexOf(String(target.value).toLocaleLowerCase()) !== -1)
-      // console.log('handleFilter', target.value, {filteredData} )
-      setFilteredData(filteredData)
-    } else {
-      setFilteredData(JSON.parse(planets.allPlanets).results);
+    if (planets && planets.status === 'done') {
+      setLoading(false);
+      var data = JSON.parse(planets.allPlanets);
+      setTableData(data);
+      setFilteredData(data.results)
     }
-  }, [])
-  
-  useEffect(() => {
-    setFilteredData(tableData.results);
-    renderTable()
-  },[])
+  }, [planets, loading, getFilteredData]) // <- this will monitor state 
+
+  const content = (planets.status !== 'done') ? 
+  (<RingLoader loading={planets.status !== 'done'} color={'#000'} size={50} />) 
+    : 
+  (
+    <>
+      <Container>{renderTable()}</Container>
+      <Container>{renderPagination()}</Container>
+    </>
+  )
 
 
   return (
     <Container sx={{backgroundColor: 'transparent', borderWidth: 2,}}>
-    <Container>
-      <Heading variant={'h1'}>Planet List</Heading>
-      <FilterInput handleFilter={handleFilter}/>
-    </Container>
-      <RingLoader loading={planets.status !== 'done'} color={'#000'} size={50} />
-      <Container>{table}</Container>
-    <Container>{pagination}</Container>
+      <Container>
+        <Heading variant={'h1'}>Planet List</Heading>
+        <FilterInput inputRef={filterRef} handleFilter={handleFilter}/>
+      </Container>
+      { content }
+      
     </Container>
   )
 });
