@@ -24,18 +24,17 @@ export const PlanetDetail = observer((props) => {
   const { rowData } = props;
   const { planetdetails } = useMst();
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState(false);
-  const detail = useRef(false);
   const [url, setURL] = useState(false);
-   // One to load data
+
+  // One to load data
    useEffect(() => {
     if (rowData.url !== url) {
       setURL(rowData.url)
       setLoading(true);
-      setData(planetdetails.FetchDetails(rowData.url));
+      planetdetails.FetchDetails(rowData.url);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData]); // <-- leave empty so it only executes once.
+  }, [rowData]); // <-- triggers a change if the row.url changes.
 
     // one to finish
     useEffect(() => {

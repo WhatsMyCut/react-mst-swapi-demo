@@ -36,14 +36,14 @@ const PlanetDetail = types.model({
 }).views(self => {
 return {
     get planetDetails() {
-      console.log('PlanetDetail.planetDetails', self.planetdetails)
+      // console.log('PlanetDetail.planetDetails', self.planetdetails)
       return self.planetdetails
     },
     findPlanetDetailByName(name) {
         return self.planetdetails.filter(t => t.name === name)
     },
     get status() {
-      console.log('PlanetDetail.status', self.state)
+      // console.log('PlanetDetail.status', self.state)
       return self.state
     }
   }
@@ -58,7 +58,7 @@ return {
       
       self.planetdetails = yield getData(url);
       self.state = 'done';
-      console.log('FetchDetails.fetched', url);
+      // console.log('FetchDetails.fetched', url);
     } catch (error) { // this catches the try
       self.state = 'error'
     }
