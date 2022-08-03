@@ -1,5 +1,22 @@
 import { types, flow } from "mobx-state-tree";
+import Moment from 'moment';
+import '../../components/PlanetDetail/styles.scss';
+
+import { Heading, Text } from 'theme-ui';
 import { getData } from '../../services/APIService';
+import { 
+  PlanetOutline, 
+  EarthOutline, 
+  InvertModeOutline, 
+  CloudyNightOutline, 
+  BarbellOutline, 
+  ImageOutline,
+  WaterOutline,
+  PeopleOutline,
+  CalendarOutline,
+  PencilOutline,
+  BrowsersOutline
+} from 'react-ionicons';
 
 const PlanetDetail = types.model({
   climate: types.optional(types.string, ""),
@@ -18,27 +35,30 @@ const PlanetDetail = types.model({
   url: types.optional(types.string, ""),
 }).views(self => {
 return {
-  get planetDetails() {
-    // console.log('PlanetDeteail.planetDetails', self.planetdetails)
-    return self.planetdetails
-  },
-  findPlanetDetailByName(name) {
-      return self.planetdetails.filter(t => t.name === name)
-  },
-  get status() {
-    return self.state
+    get planetDetails() {
+      console.log('PlanetDetail.planetDetails', self.planetdetails)
+      return self.planetdetails
+    },
+    findPlanetDetailByName(name) {
+        return self.planetdetails.filter(t => t.name === name)
+    },
+    get status() {
+      console.log('PlanetDetail.status', self.state)
+      return self.state
+    }
   }
-}
 }).actions(self => {
 
   const FetchDetails = flow( function* (url) {// <- note the star, this is a generator function!
-      
+    // console.log('FetchDetails', url)
+    self.planetdetails = undefined;
     self.state = 'loading';
     try {
       // ... yield can be used in async/await style
       
       self.planetdetails = yield getData(url);
       self.state = 'done';
+      console.log('FetchDetails.fetched', url);
     } catch (error) { // this catches the try
       self.state = 'error'
     }

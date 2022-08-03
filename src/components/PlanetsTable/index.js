@@ -31,15 +31,15 @@ export const PlanetsTable = observer((props) => {
 
   // one to finish
   useEffect(() => {
-    if (loading && planets && planets.allPlanets) {
+    if (planets && planets.status === 'done') {
       setLoading(false);
       setTableData(JSON.parse(planets.allPlanets))
     }
   }, [planets, loading]) // <- this will monitor state 
 
-  const renderPagination = useCallback(tableData => {
+  const renderPagination = useCallback(() => {
     if (!!tableData) {
-      const json = JSON.parse(tableData);
+      const json = tableData;
       const { next, previous, count } = json;
       const display = filteredData.length
 

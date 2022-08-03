@@ -1,5 +1,6 @@
 /** @jsxImportSource theme-ui */
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { observer } from "mobx-react-lite";
 import { useMst } from '../../store/RootStore';
 import { RingLoader } from 'react-spinners'
 import Moment from 'moment';
@@ -19,34 +20,40 @@ import {
   BrowsersOutline
 } from 'react-ionicons'
 
-export const PlanetDetail = (props) => {
+export const PlanetDetail = observer((props) => {
   const { rowData } = props;
   const { planetdetails } = useMst();
   const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(false);
+  const detail = useRef(false);
   const [url, setURL] = useState(false);
    // One to load data
    useEffect(() => {
-    setLoading(true);
-    planetdetails.FetchDetails(rowData.url);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // <-- leave empty so it only executes once.
-  // one to finish
-  useEffect(() => {
-    if (loading && !!planetdetails.planetDetails) {
-      setLoading(false);
+    if (rowData.url !== url) {
+      setURL(rowData.url)
+      setLoading(true);
+      setData(planetdetails.FetchDetails(rowData.url));
     }
-  }, [planetdetails.planetDetails, loading]) // <- this will monitor state 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowData]); // <-- leave empty so it only executes once.
 
-  const renderPlanetDetails = useCallback(() => {
-      if (!!planetdetails.planetDetails) {
-        const details = JSON.parse(planetdetails.planetDetails);
+    // one to finish
+    useEffect(() => {
+      if (loading && !!planetdetails.planetDetails ) {
+        setLoading(false);
+      }
+    }, [loading, planetdetails]) // <- this will monitor state 
+
+  const renderPlanetDetails = useCallback((payload) => {
+      if (!!payload) {
+        const details = JSON.parse(payload);
         const createdDate = Moment(details.created).format('d MMM');
         const editedDate = Moment(details.edited).format('d MMM');
         return (
           <div className={'detail-container'}>
             <Heading className='detail-header' variant='h1'>{details.name}</Heading>
             <div className='detail-subcontainer'>
-              <div className={'detail-row right'}
+              <div className={'detail-row'}
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
@@ -55,7 +62,7 @@ export const PlanetDetail = (props) => {
                 <div><EarthOutline sx={{ margin: '0 10px'}}/> Rotation Period</div>
                 <div>{details.rotation_period}</div>
               </div>
-              <div className={'detail-row right'}
+              <div className={'detail-row'}
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
@@ -64,7 +71,7 @@ export const PlanetDetail = (props) => {
                 <div><PlanetOutline  sx={{ margin: '0 10px'}}/> Orbital Period</div>
                 <div>{details.orbital_period}</div>
               </div>
-              <div className='detail-row right'
+              <div className='detail-row'
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
@@ -144,39 +151,19 @@ export const PlanetDetail = (props) => {
                 <Text><BrowsersOutline /> URL</Text>
                 <Text>{details.url}</Text>
               </div>
-
-            {/* {
-              Object.entries(details).map((v, i) => {
-                const content = (typeof(v[1]) === 'array') ? Object.values(v[1]).map((u, j) => <><Text key={j}>{u}</Text><br/></>) : <Text>{v[1]}</Text>
-                
-                return (
-                    <Container key={i} className={'detail-row'}>
-                      <Label>{v[0]}</Label> { content }
-                    </Container>
-                )
-              })              
-            } */}
             </div>
           </div>
         )
-
- 
       }
-  }, [])
+  }, []);
 
   
-  useEffect(() => {
-    if (rowData.url !== url) setURL(rowData.url)
-    setLoading(planetdetails.status === "loading")
-  }, [planetdetails, rowData, url])
-  
-  const details = renderPlanetDetails()
   return (
     <Container className={'detail-panel'}>
-      <RingLoader loading={loading} color={'#000'} size={150} />
-      { details }
+      <RingLoader loading={planetdetails.status !== 'done'} color={'#000'} size={150} />
+      { planetdetails.status === 'done' && renderPlanetDetails(planetdetails.planetDetails) }
     </Container>
   )
-}
+})
 
 export default PlanetDetail;

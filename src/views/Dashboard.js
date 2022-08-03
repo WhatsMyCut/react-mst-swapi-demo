@@ -13,6 +13,7 @@ export const Dashboard = observer((props) => {
   const [currentCategory, setCategory] = useState('planets');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerContent, setDrawerContent] = useState();
+  const drawer = useRef();
 
   const handleClose = useCallback(() => {
     setRow(undefined);
@@ -26,13 +27,14 @@ export const Dashboard = observer((props) => {
     if (rowData.url) {
       
       if (String(rowData.url).indexOf('planets') !== -1) {
-        setDrawerContent(<PlanetDetail rowData={rowData} />)
+        drawer.current = <PlanetDetail rowData={rowData} />
+        setDrawerContent(drawer.current)
       } else if (String(rowData.url).indexOf('category') !== -1){
         setDrawerContent('category panel');
       }
       setDrawerOpen(true);
     }
-  }, [currentRow])
+  }, [])
 
   const setCurrentCategory = useCallback(e => {
     e.preventDefault();
@@ -43,13 +45,14 @@ export const Dashboard = observer((props) => {
 
   useEffect(() => {
   }, [])
-  const drawer = (drawerContent)
+  
+  drawer.current = (drawerContent);
 
   const table = (<PlanetsTable setCurrentRow={setCurrentRow} currentRow={currentRow} />)
   const breadcrumb = (<Breadcrumb currentCategory={currentCategory} currentRow={currentRow} />)
   return (
     <FlexboxSidebar sidebar={<Sidebar {...props} setCurrentCategory={setCurrentCategory} />}>
-      <Drawer handleClose={handleClose} isOpen={drawerOpen} >{drawer}</Drawer>
+      <Drawer handleClose={handleClose} isOpen={drawerOpen} >{drawer.current}</Drawer>
       <Container className="App" styles={[{...props.styles, ...props.theme}]}>
 
         <header className="App-header">

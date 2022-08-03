@@ -25,6 +25,7 @@ export const useAPIService = (props) => {
     setLoading(true);
     setData(getData(fullURL)
       .then((res) => res.json())
+      .then((result) => console.log('fetched: ', {result}))
       .catch(error => setError(error))
     );
     setLoading(false)

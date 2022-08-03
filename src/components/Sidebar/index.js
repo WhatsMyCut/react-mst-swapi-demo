@@ -19,7 +19,8 @@ export const Sidebar = observer((props) => {
 
   // one to finish
   useEffect(() => {
-    if (loading && categories.allCategories && categories.allCategories.length) {
+    const cats = categories.allCategories && categories.allCategories.length
+    if (loading && cats) {
       setLoading(false);
     }
   }, [categories.allCategories, loading]) // <- this will monitor state 
