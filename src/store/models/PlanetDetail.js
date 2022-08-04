@@ -1,22 +1,5 @@
 import { types, flow } from "mobx-state-tree";
-import Moment from 'moment';
-import '../../components/PlanetDetail/styles.scss';
-
-import { Heading, Text } from 'theme-ui';
 import { getData } from '../../services/APIService';
-import { 
-  PlanetOutline, 
-  EarthOutline, 
-  InvertModeOutline, 
-  CloudyNightOutline, 
-  BarbellOutline, 
-  ImageOutline,
-  WaterOutline,
-  PeopleOutline,
-  CalendarOutline,
-  PencilOutline,
-  BrowsersOutline
-} from 'react-ionicons';
 
 const PlanetDetail = types.model({
   climate: types.optional(types.string, ""),

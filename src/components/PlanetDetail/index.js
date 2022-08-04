@@ -1,11 +1,11 @@
 /** @jsxImportSource theme-ui */
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { observer } from "mobx-react-lite";
 import { useMst } from '../../store/RootStore';
 import { RingLoader } from 'react-spinners'
 import Moment from 'moment';
 import './styles.scss';
-import { Container, Heading, Label, Text } from 'theme-ui';
+import { Box, Container, Heading, Text } from 'theme-ui';
 import { 
   PlanetOutline, 
   EarthOutline, 
@@ -19,12 +19,17 @@ import {
   PencilOutline,
   BrowsersOutline
 } from 'react-ionicons'
+import Resident from '../Resident';
 
 export const PlanetDetail = observer((props) => {
   const { rowData } = props;
   const { planetdetails } = useMst();
   const [loading, setLoading] = useState(false);
   const [url, setURL] = useState(false);
+
+  const renderResident = useCallback((url) =>  {
+    return (<Box p={3}><Resident residentURL={url.toString()}/></Box>)
+  }, []);
 
   // One to load data
    useEffect(() => {
@@ -150,6 +155,13 @@ export const PlanetDetail = observer((props) => {
                 <Text><BrowsersOutline /> URL</Text>
                 <Text>{details.url}</Text>
               </div>
+            </div>
+            
+            <div className='detail-subcontainer'>
+              <Heading className='detail-header' variant='h6' sx={{ fontSize: '18px', marginTop: '25px'}}>Residents</Heading>
+              { Object.values(details.residents).map((v, i) => {
+                return <Container p={3} key={i}>{ renderResident(v) }</Container>;
+              })}
             </div>
           </div>
         )

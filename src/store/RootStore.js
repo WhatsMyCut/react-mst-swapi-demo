@@ -1,17 +1,19 @@
 import { onSnapshot, process, types } from "mobx-state-tree";
 import { createContext, useContext } from "react";
-import { Category, Planet, PlanetDetail } from "./models/";
+import { Category, Planet, PlanetDetail, Resident } from "./models/";
 
 const RootStore = types.model({
   categories: Category,
   planets: Planet,
-  planetdetails: PlanetDetail
+  planetdetails: PlanetDetail,
+  residents: Resident,
 })
 
 let initialState = RootStore.create({
   planets: {},
   categories: {},
   planetdetails: {},
+  residents: {},
 })
 
 
