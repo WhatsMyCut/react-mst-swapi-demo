@@ -10,7 +10,6 @@ const Planet = types.model({
 }).views(self => {
 return {
   get allPlanets() {
-    // console.log('Planet.allPlanets', JSON.stringify(self.planets))
     return self.planets
   },
   findPlanetByName(name) {
@@ -22,13 +21,29 @@ return {
 }
 }).actions(self => {
 
+  const fetchPage = flow(function* (url) {
+    return yield getData(url);
+  })
+
   const FetchAll = flow( function* () {// <- note the star, this is a generator function!
       
     self.state = 'loading';
     try {
+      let allRows = [];
+      // get first page
+      const first = yield fetchPage(process.env.REACT_APP_API_URL + "planets");
+      let json = JSON.parse(first);
+      allRows = [...allRows, ...json.results];
+      while (json.next) {
+        const nextPage = yield fetchPage(json.next);
+        const newResults = JSON.parse(nextPage);
+        allRows = [...allRows, ...newResults.results];
+        json = JSON.parse(nextPage);
+      }
+      json.results = allRows;
+      self.planets = JSON.stringify(json);     
+      // additional pages and add additions results to the results
       // ... yield can be used in async/await style
-      
-      self.planets = yield getData(process.env.REACT_APP_API_URL + "planets");
       self.state = 'done';
     } catch (error) { // this catches the try
       self.state = 'error'
