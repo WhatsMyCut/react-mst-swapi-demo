@@ -20,12 +20,11 @@ const Resident = types.model({
   url: types.optional(types.string, ""),
 }).views(self => {
 return {
-    get residentDetails() {
+    get allResidents() {
       return self.residents
     },
-    findResidentByURL(url) {
-      console.log('Resident.findResidentByURL', self.residents)
-      return self.residents[url];
+    async findResidentByURL(url) {
+      return self.residents[url] && self.residents[url].data;
     },
     get status() {
       return self.state
@@ -40,11 +39,13 @@ return {
     try {
       // ... yield can be used in async/await style
       const y = yield getData(url);
-      console.log('Resident.findResidentByURL')
-      self.residents[url] = y;
+      if (!self.residents[url]) self.residents[url] = { data: y, status: 'loading'};
+      self.residents[url]['status'] = "done";
       self.state = 'done';
+      // console.log('Resident.FetchResident', self.residents[url])
     } catch (error) { // this catches the try
       self.state = 'error'
+      self.residents[url].status = "error"
     }
 
     // The action will return a promise that resolves to the returned value

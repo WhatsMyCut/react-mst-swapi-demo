@@ -5,7 +5,7 @@ import { useMst } from '../../store/RootStore';
 import { RingLoader } from 'react-spinners'
 import Moment from 'moment';
 import './styles.scss';
-import { Box, Container, Heading, Text } from 'theme-ui';
+import { Box, Container, Grid, Heading, Text } from 'theme-ui';
 import { 
   PlanetOutline, 
   EarthOutline, 
@@ -28,7 +28,7 @@ export const PlanetDetail = observer((props) => {
   const [url, setURL] = useState(false);
 
   const renderResident = useCallback((url) =>  {
-    return (<Box p={3}><Resident residentURL={url.toString()}/></Box>)
+    return (<><Resident residentURL={url.toString()} displayBug={true}/></>)
   }, []);
 
   // One to load data
@@ -159,9 +159,11 @@ export const PlanetDetail = observer((props) => {
             
             <div className='detail-subcontainer'>
               <Heading className='detail-header' variant='h6' sx={{ fontSize: '18px', marginTop: '25px'}}>Residents</Heading>
+              <Grid p={12}>
               { Object.values(details.residents).map((v, i) => {
-                return <Container p={3} key={i}>{ renderResident(v) }</Container>;
+                return <Box p={3} key={i}>{ renderResident(v) }</Box>;
               })}
+              </Grid>
             </div>
           </div>
         )
