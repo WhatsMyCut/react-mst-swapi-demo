@@ -35,7 +35,7 @@ export const Sidebar = observer((props) => {
         </NavLink>
       </Container>
     )
-  }, []);
+  }, [setCurrentCategory]);
 
   const renderCategoryPanels = useCallback(data => {
     if (!!data) {
@@ -45,7 +45,7 @@ export const Sidebar = observer((props) => {
         })
       )
     }
-  }, [])
+  }, [props])
 
   const panels = renderCategoryPanels(categories.allCategories)
 

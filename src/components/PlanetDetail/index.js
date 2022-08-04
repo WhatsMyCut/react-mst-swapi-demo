@@ -1,5 +1,5 @@
 /** @jsxImportSource theme-ui */
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { observer } from "mobx-react-lite";
 import { useMst } from '../../store/RootStore';
 import { RingLoader } from 'react-spinners'
@@ -166,7 +166,7 @@ export const PlanetDetail = observer((props) => {
           </div>
         )
       }
-  }, []);
+  }, [renderResident]);
 
   
   return (

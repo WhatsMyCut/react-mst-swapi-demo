@@ -1,8 +1,7 @@
 /** @jsxImportSource theme-ui */
 import { useCallback, useRef, useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
 import { observer } from "mobx-react-lite";
-import { Container, Text, Heading, Card, NavLink } from 'theme-ui';
+import { Container } from 'theme-ui';
 import { Breadcrumb, FlexboxSidebar, PlanetsTable } from '../components';
 import Sidebar from "../components/Sidebar";
 import Drawer from '../components/Drawer';

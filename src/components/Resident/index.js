@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useMst } from '../../store/RootStore';
 import { RingLoader } from 'react-spinners'
 import { observer } from "mobx-react-lite";
@@ -7,7 +7,6 @@ import './styles.scss';
 
 export const Resident = observer((props) => {
   const [loading, setLoading] = useState(false);
-  const [res, setRes] = useState(false);
   const { residents } = useMst();
   const { residentURL } = props;
 
@@ -23,9 +22,6 @@ export const Resident = observer((props) => {
     if (loading && residents && residents.status !== 'loading') {
       console.log('FetchResident', JSON.stringify(residents))
       setLoading(false);
-      var data = residents.findResidentByURL(residentURL);
-
-      setRes(data);
     }
   }, [loading, residents, residentURL]) // <- this will monitor state 
 
